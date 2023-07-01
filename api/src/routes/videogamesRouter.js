@@ -1,19 +1,20 @@
 const { Router } = require('express'); 
 
+
+const { 
+    getVideogamesHandler,
+    getDetailHandler,
+    postVidegoameHandler 
+} = require('../handlers/videogamesHandlers')
+
 const videogamesRouter = Router(); 
 
-//ahora si creo mis rutas de videogames
-videogamesRouter.get('/', (req, res) =>{
-    res.status(200).send('NIY: this route get all videogames/ query search videogames')
-})
+//creo mis rutas de videogames y les asigno su handler correspondiente
+videogamesRouter.get('/', getVideogamesHandler)
 
-videogamesRouter.get('/:id', (req, res) =>{
-    res.status(200).send('NIY: this route get a videogame detail based on id')
-})
+videogamesRouter.get('/:id', getDetailHandler)
 
-videogamesRouter.post('/', (req, res) =>{
-    res.status(200).send('NIY: this route post a new videogame')
-})
+videogamesRouter.post('/', postVidegoameHandler )
 
 
 module.exports = videogamesRouter;
