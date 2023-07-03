@@ -1,23 +1,44 @@
 //handlers -> fx que manejan mis requests y mis responses
+const {
+    createVideogame,
+    getVideogameById,
+    getVideogameByName,
+    getVideogames
+} = require('../controllers/videogamesControllers');
 
-const getVideogamesHandler = (req, res) => {
+const getVideogamesHandler = async (req, res) => {
     const { name } = req.query;
 
-    if(name !== undefined) {
-        res.status(200).send(`NIY: this route get videogames with name ${name}`)
+    try {
+        const result = name 
+        ? await getVideogameByName(name)
+        : await getVideogames()
+
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(404).json({error: error.message})
     }
-
-    res.status(200).send('NIY: this route get all videogames/ query search videogames')
 };
 
-const getDetailHandler = (req, res) => {
+const getDetailHandler = async (req, res) => {
     const { id } = req.params; 
-    res.status(200).send(`NIY: this route get a specific videgame details with id {id}`)
+    const source = isNaN(id) ? 'db' : 'api'
+    try {
+        const videogame = await getVideogameById(id, source)
+        res.status(200).json(videogame)
+    } catch (error) {
+        res.status(404).json({error: error.message})
+    }
 };
 
-const postVidegoameHandler = (req, res) => {
-    const {name, description, patforms, image, date, rating} = req.body;
-    res.status(200).send(`NIY: this route create a new videogame with name: ${name}, descrption: ${description}, etc`)
+const postVidegoameHandler = async (req, res) => {
+    const {name, description, platforms, image, releaseDate, rating} = req.body;
+    try {
+        const newVideogame = await createVideogame(name, description, platforms, image, releaseDate, rating)
+        res.status(200).json(newVideogame)
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
 };
 
 
